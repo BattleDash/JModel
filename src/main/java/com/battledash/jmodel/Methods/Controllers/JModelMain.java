@@ -156,7 +156,7 @@ public class JModelMain {
     }
 
     public void loadAllPaks(Event e) {
-        Platform.runLater(() -> {
+        new Thread(() -> {
             index = new PakIndex();
 
             File directory = PAKsUtility.getGameFilesLocation();
@@ -174,15 +174,16 @@ public class JModelMain {
             }
 
             logger.info("Requesting pak index tree generation");
-            setPakDirectoryTree();
+            Platform.runLater(() -> {
+                PakDirectoryTree.setRoot(TreeUtility.generateTree(index.getIndex()));
+                logger.info("Done generating");
+                PakDirectoryTree.setShowRoot(false);
+            });
 
-        });
+        }).start();
     }
 
     private void setPakDirectoryTree() {
-        PakDirectoryTree.setRoot(TreeUtility.generateTree(index.getIndex()));
-        logger.info("Done generating");
-        PakDirectoryTree.setShowRoot(false);
     }
 
 }
