@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PakIndex {
 
@@ -59,6 +61,12 @@ public class PakIndex {
 
     public Map<String, List<GameFile>> getDirectories() {
         return directories;
+    }
+
+    public List<GameFile> searchForFiles(String search) {
+        return index.stream()
+                .filter(gameFile -> search.toLowerCase().startsWith(gameFile.getNameWithoutExtension().toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     // Future use

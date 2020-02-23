@@ -37,8 +37,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -50,6 +53,7 @@ import me.fungames.jfortniteparse.ue4.assets.Package;
 import me.fungames.jfortniteparse.ue4.assets.exports.UEExport;
 import me.fungames.jfortniteparse.ue4.assets.exports.USoundWave;
 import me.fungames.jfortniteparse.ue4.assets.exports.athena.AthenaItemDefinition;
+import me.fungames.jfortniteparse.ue4.assets.exports.fort.FortWeaponMeleeItemDefinition;
 import me.fungames.jfortniteparse.ue4.pak.GameFile;
 import me.fungames.jfortniteparse.ue4.pak.PakFileReader;
 
@@ -76,6 +80,10 @@ public class JModelMain {
     public ImageView AssetImage;
     @FXML
     public Button ExtractButton;
+    @FXML
+    public TextField FileSearchField;
+    @FXML
+    public Label VersionText;
 
     public static Logger logger;
 
@@ -86,7 +94,8 @@ public class JModelMain {
 
     @FXML
     public void initialize() {
-        LogText.setText("Initialized JModel, Version 0.0.1 by BattleDash");
+        LogText.setText("Initialized JModel, " + JModel.version + " by BattleDash");
+        VersionText.setText("JModel " + JModel.version + " by BattleDash");
         logger = new Logger(LogText);
 
         PakDirectoryTree.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -148,6 +157,8 @@ public class JModelMain {
                             logger.warn("Failed, resetting BufferedImage");
                             AssetImage.setImage(null);
                         }
+                    } else if (export instanceof FortWeaponMeleeItemDefinition) {
+                        // TODO
                     } else if (export instanceof USoundWave) {
                         logger.debug("Found USoundWave, converting Sound");
                         try {
@@ -181,6 +192,10 @@ public class JModelMain {
         controller.handleAsset(TreeUtility.getPathFromItem((TreeItem) JModel.mainSceneController.PakDirectoryTree.getSelectionModel().getSelectedItem()), loadedGameFile, loadedPackage, JsonAssetData.getText(), AssetImage.getImage());
         window.setScene(new Scene(root));
         window.show();
+    }
+
+    public void onSearchFieldChanged(KeyEvent event) {
+
     }
 
     public void loadAllPaks(Event e) {

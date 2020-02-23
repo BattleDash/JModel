@@ -8,6 +8,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -82,19 +83,25 @@
                <children>
                   <HBox prefHeight="26.0" prefWidth="1200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Region prefHeight="26.0" prefWidth="1048.0" />
+                        <Label text="Search:">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="FileSearchField" prefHeight="25.0" prefWidth="193.0" />
+                        <Region prefHeight="26.0" prefWidth="690.0" />
                         <Button fx:id="ExtractButton" mnemonicParsing="false" onMouseClicked="#onExtractButton" prefHeight="25.0" prefWidth="107.0" text="Extract Asset" />
                      </children>
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                      <VBox.margin>
-                        <Insets />
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                      </VBox.margin>
                   </HBox>
               <HBox>
                 <children>
-                  <Label text="JModel 0.0.5 by BattleDash" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="VersionText" text="JModel 0.0.5 by BattleDash" HBox.hgrow="ALWAYS" />
                 </children>
                 <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />

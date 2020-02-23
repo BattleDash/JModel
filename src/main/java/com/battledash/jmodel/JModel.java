@@ -31,6 +31,7 @@ import java.io.File;
 public class JModel extends Application {
 
     public static JModelMain mainSceneController;
+    public static String version = "v0.0.2";
 
     public static void main(String[] args) {
         PropertyConfigurator.configure("log4j.properties");

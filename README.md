@@ -19,13 +19,15 @@
 
 ## Usage
 
-To run this program, you'll need [Java JDK 8](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html) or newer installed on your computer. Once it's done, you can download the latest release [here](https://github.com/BattleDash/JModel/releases/).
+To run this program, you'll need [Java 8](https://java.com/en/download/) or newer installed on your computer. Once it's done, you can download the latest release [here](https://github.com/BattleDash/JModel/releases/).
 
-1. Open a __Command Prompt__ and navigate to the folder that __JModel.jar__ is in.
-2. Type "`java -jar JModel.jar`" and the program will open
-3. The path to your Fortnite .PAK files should be automatically detected - Manual input is coming soon
-4. You can now load one or all .PAK files
-5. Navigate through the tree to find the Asset you want
+1. Install [Java 8](https://java.com/en/download/)
+2. Download JModel.jar and place it in a new folder
+4. Double click JModel.jar to open it
+5. Go to the "Load" Dropdown and Click "Load All PAKs"
+6. The path to your Fortnite .PAK files should be automatically detected - Manual input is coming soon
+7. You can now load one or all .PAK files
+8. Navigate through the tree to find the Asset you want
 
 ## Credits
 
