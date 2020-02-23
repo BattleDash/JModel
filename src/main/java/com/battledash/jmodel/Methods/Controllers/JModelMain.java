@@ -36,19 +36,27 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import me.fungames.jfortniteparse.converters.fort.ItemDefinitionContainer;
 import me.fungames.jfortniteparse.converters.fort.ItemDefinitionsKt;
+import me.fungames.jfortniteparse.converters.ue4.SoundWave;
+import me.fungames.jfortniteparse.converters.ue4.SoundsKt;
 import me.fungames.jfortniteparse.ue4.assets.Package;
+import me.fungames.jfortniteparse.ue4.assets.exports.UEExport;
+import me.fungames.jfortniteparse.ue4.assets.exports.USoundWave;
 import me.fungames.jfortniteparse.ue4.assets.exports.athena.AthenaItemDefinition;
 import me.fungames.jfortniteparse.ue4.pak.GameFile;
 import me.fungames.jfortniteparse.ue4.pak.PakFileReader;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -99,7 +107,7 @@ public class JModelMain {
 
         PakDirectoryFiles.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             Node node = event.getPickResult().getIntersectedNode();
-            if (node instanceof Text || (node instanceof ListCell && ((ListCell) node).getText() != null)) {
+            if (event.getClickCount() == 2 && (node instanceof Text || (node instanceof ListCell && ((ListCell) node).getText() != null))) {
                 JsonAssetData.setText("");
                 AssetImage.setImage(null);
                 String folder = TreeUtility.getPathFromItem((TreeItem) PakDirectoryTree.getSelectionModel().getSelectedItem());
@@ -123,18 +131,38 @@ public class JModelMain {
                     logger.warn("Failed, resetting JsonFields");
                     JsonAssetData.setText("");
                 }
-                logger.debug("Attempting Image generation");
                 // Attempts to generate an item image from the asset. Experimental
-                try {
-                    // TODO Add support for non AthenaItemDefinition objects
-                    AthenaItemDefinition item = (AthenaItemDefinition) loadedPackage.getExports().get(0);
-                    ItemDefinitionContainer container1 = ItemDefinitionsKt.createContainer(item, container.provider, true, false, null);
-                    logger.debug("Loading image " + item.getDisplayName().getText());
-                    BufferedImage image = container1.getImage();
-                    AssetImage.setImage(SwingFXUtils.toFXImage(image, null));
-                } catch (Exception e) {
-                    logger.warn("Failed, resetting BufferedImage");
-                    AssetImage.setImage(null);
+                // Attempts to parse it as a soundwave
+                if (loadedPackage.getExports() != null) {
+                    UEExport export = loadedPackage.getExports().get(0);
+                    if (export instanceof AthenaItemDefinition) {
+                        logger.debug("Found AthenaItemDefinition, generating Image");
+                        try {
+                            // TODO Add support for non AthenaItemDefinition objects
+                            AthenaItemDefinition item = (AthenaItemDefinition) loadedPackage.getExports().get(0);
+                            ItemDefinitionContainer container1 = ItemDefinitionsKt.createContainer(item, container.provider, true, false, null);
+                            logger.debug("Loading image " + item.getDisplayName().getText());
+                            BufferedImage image = container1.getImage();
+                            AssetImage.setImage(SwingFXUtils.toFXImage(image, null));
+                        } catch (Exception e) {
+                            logger.warn("Failed, resetting BufferedImage");
+                            AssetImage.setImage(null);
+                        }
+                    } else if (export instanceof USoundWave) {
+                        logger.debug("Found USoundWave, converting Sound");
+                        try {
+                            USoundWave item = (USoundWave) loadedPackage.getExports().get(0);
+                            SoundWave sound = SoundsKt.convert(item);
+                            File file = File.createTempFile(loadedGameFile.getNameWithoutExtension(), ".wav");
+                            FileOutputStream writer = new FileOutputStream(file);
+                            writer.write(sound.getData());
+                            writer.close();
+                            file.deleteOnExit();
+                            Desktop.getDesktop().open(file);
+                        } catch (Exception e) {
+
+                        }
+                    }
                 }
             }
         });
@@ -169,8 +197,8 @@ public class JModelMain {
                 PakFileReader reader = new PakFileReader(directory + "\\" + pakName);
                 if (!reader.testAesKey(aesKey)) continue;
                 reader.setAesKey(aesKey);
-                logger.debug("Loading " + pakName);
                 index.addPak(reader);
+                logger.debug(pakName + ": " + reader.getFileCount() + " files (" + reader.getEncryptedFileCount() + " encrypted)," + " mount point: \"" + reader.getMountPrefix() + "\", version " + reader.getPakInfo().getVersion());
             }
 
             logger.info("Requesting pak index tree generation");
@@ -181,9 +209,6 @@ public class JModelMain {
             });
 
         }).start();
-    }
-
-    private void setPakDirectoryTree() {
     }
 
 }

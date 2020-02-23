@@ -65,6 +65,10 @@ public class JModelExport {
         this.gamePackage = gamePackage;
         this.json = json;
         this.image = image;
+        if (asset == null) {
+            ((Stage) ExportButton.getScene().getWindow()).close();
+            return;
+        }
         if (this.gamePackage == null) SoundExportCheckBox.setDisable(true);
         if (asset.getUbulk() == null) UBulkExportCheckBox.setDisable(true);
         if (asset.getUexp() == null) UExpExportCheckBox.setDisable(true);
