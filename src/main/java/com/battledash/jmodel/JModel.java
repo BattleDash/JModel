@@ -24,6 +24,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.log4j.PropertyConfigurator;
 
 import java.io.File;
 
@@ -32,6 +33,7 @@ public class JModel extends Application {
     public static JModelMain mainSceneController;
 
     public static void main(String[] args) {
+        PropertyConfigurator.configure("log4j.properties");
         launch(args);
     }
 

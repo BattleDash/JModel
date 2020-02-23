@@ -31,5 +31,5 @@ To run this program, you'll need [Java JDK 8](https://www.oracle.com/java/techno
 
 This software uses the following open source packages:
 
-- [PakReader](https://github.com/FunGamesLeaks/JFortniteParse)
+- [JFortniteParse](https://github.com/FunGamesLeaks/JFortniteParse)
 - [JavaFX](https://openjfx.io/)

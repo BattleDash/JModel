@@ -18,7 +18,6 @@
 package com.battledash.jmodel.Methods.Controllers;
 
 import com.battledash.jmodel.Graphical.Popups.AlertBox;
-import com.battledash.jmodel.JModel;
 import com.battledash.jmodel.Methods.Utilities.PAKsUtility;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -28,11 +27,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import me.fungames.jfortniteparse.converters.ue4.SoundWave;
 import me.fungames.jfortniteparse.converters.ue4.SoundsKt;
-import me.fungames.jfortniteparse.ue4.assets.FObjectExport;
 import me.fungames.jfortniteparse.ue4.assets.Package;
-import me.fungames.jfortniteparse.ue4.assets.exports.UEExport;
 import me.fungames.jfortniteparse.ue4.assets.exports.USoundWave;
-import me.fungames.jfortniteparse.ue4.assets.exports.athena.AthenaItemDefinition;
 import me.fungames.jfortniteparse.ue4.pak.GameFile;
 import me.fungames.jfortniteparse.ue4.pak.PakFileReader;
 
@@ -69,6 +65,7 @@ public class JModelExport {
         this.gamePackage = gamePackage;
         this.json = json;
         this.image = image;
+        if (this.gamePackage == null) SoundExportCheckBox.setDisable(true);
         if (asset.getUbulk() == null) UBulkExportCheckBox.setDisable(true);
         if (asset.getUexp() == null) UExpExportCheckBox.setDisable(true);
         if (json.equals("")) JSONExportCheckBox.setDisable(true);
@@ -82,21 +79,17 @@ public class JModelExport {
         boolean UAssetExport = UAssetExportCheckBox.isSelected();
         boolean UBulkExport = UBulkExportCheckBox.isSelected();
         boolean UExpExport = UExpExportCheckBox.isSelected();
-        ((Stage) ExportButton.getScene().getWindow()).close();
 
         JModelMain.logger.debug(this.asset.getPathWithoutExtension());
         File path = new File("Output/" + this.path);
         path.mkdirs();
         String name = this.asset.getNameWithoutExtension();
 
-        // TODO Fix sound exporting
+        // Parsed/Converted files
         if (SoundExport) {
-            for (FObjectExport fObjectExport : this.gamePackage.getExportMap()) {
-                JModelMain.logger.info(fObjectExport.getObjectName().getText());
-            }
             USoundWave item = (USoundWave) this.gamePackage.getExports().get(0);
             SoundWave sound = SoundsKt.convert(item);
-            File file = new File(path + "/" + name + "." + sound.getFormat());
+            File file = new File(path + "/" + name + ".ogg");
             file.createNewFile();
             FileOutputStream writer = new FileOutputStream(file);
             writer.write(sound.getData());
@@ -114,12 +107,11 @@ public class JModelExport {
             file.createNewFile();
             ImageIO.write(SwingFXUtils.fromFXImage(this.image, null), "png", file);
         }
-
+        // Raw files
         PakFileReader reader = null;
         if (UAssetExport || UBulkExport || UExpExport) {
             reader = new PakFileReader(PAKsUtility.getGameFilesLocation() + "\\" + this.asset.getPakFileName());
         }
-
         if (UAssetExport) {
             File file = new File(path.getPath() + "/" + name + ".uasset");
             file.createNewFile();
@@ -127,7 +119,6 @@ public class JModelExport {
             writer.write(reader.extract(this.asset));
             writer.close();
         }
-
         if (UBulkExport) {
             File file = new File(path.getPath() + "/" + name + ".ubulk");
             file.createNewFile();
@@ -135,7 +126,6 @@ public class JModelExport {
             writer.write(reader.extract(this.asset.getUbulk()));
             writer.close();
         }
-
         if (UExpExport) {
             File file = new File(path.getPath() + "/" + name + ".uexp");
             file.createNewFile();
@@ -144,7 +134,8 @@ public class JModelExport {
             writer.close();
         }
 
-        AlertBox.display("Exported!", "The requested assets have been exported to the Output folder!");
+        AlertBox.display("Done!", "The requested assets have been exported to the Output folder!");
+        ((Stage) ExportButton.getScene().getWindow()).close();
 
     }
 
