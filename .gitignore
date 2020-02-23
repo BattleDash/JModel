@@ -8,6 +8,7 @@
 out/
 target/
 Output/
+.idea/
 
 # BlueJ files
 *.ctxt
