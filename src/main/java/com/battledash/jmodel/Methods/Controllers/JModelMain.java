@@ -103,12 +103,9 @@ public class JModelMain {
             if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
                 TreeItem<String> item = (TreeItem) PakDirectoryTree.getSelectionModel().getSelectedItem();
                 PakDirectoryFiles.getItems().clear();
-                //List<GameFile> files = index.getDirectories().get(TreeUtility.getPathFromItem(item));
-                //List<GameFile> files = container.getDirectory(TreeUtility.getPathFromItem(item));
                 List<GameFile> files = PakIndex.getDirectory(TreeUtility.getPathFromItem(item));
                 if (files == null) return;
                 for (GameFile gameFile : files) {
-                    System.out.println(gameFile.getName());
                     if (PakDirectoryFiles.getItems().contains(gameFile.getNameWithoutExtension())) continue;
                     PakDirectoryFiles.getItems().add(gameFile.getNameWithoutExtension());
                     Collections.sort(PakDirectoryFiles.getItems(), (Comparator<String>) (s1, s2) -> s1.compareToIgnoreCase(s2));
