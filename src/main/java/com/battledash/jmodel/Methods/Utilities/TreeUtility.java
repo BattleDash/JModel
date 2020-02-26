@@ -17,6 +17,7 @@
 
 package com.battledash.jmodel.Methods.Utilities;
 
+import com.battledash.jmodel.JModel;
 import javafx.scene.control.TreeItem;
 import me.fungames.jfortniteparse.ue4.pak.GameFile;
 
@@ -63,6 +64,10 @@ public class TreeUtility {
         for (TreeItem<String> stringTreeItem : items)
             path += stringTreeItem.getValue() + "/";
         return path;
+    }
+
+    public static String getSelectedPath() {
+        return TreeUtility.getPathFromItem((TreeItem) JModel.mainSceneController.PakDirectoryTree.getSelectionModel().getSelectedItem());
     }
 
 }

@@ -46,7 +46,6 @@ public class JModel extends Application {
 
         // Load the root layout from the fxml file
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/JModel_Main.fxml"));
-        //FXMLLoader loader = new FXMLLoader(new File("src/main/java/com/battledash/jmodel/Graphical/FXML/JModel_Main.fxml").toURI().toURL());
 
         Parent root = loader.load();
         mainSceneController = loader.getController();

@@ -21,8 +21,8 @@ import com.battledash.jmodel.JModel;
 import com.battledash.jmodel.Methods.Utilities.Logger;
 import com.battledash.jmodel.Methods.Utilities.PAKsUtility;
 import com.battledash.jmodel.Methods.Utilities.TreeUtility;
-import com.battledash.jmodel.PakReader.PakFileContainer;
-import com.battledash.jmodel.PakReader.PakIndex;
+import com.battledash.jmodel.Methods.PakReader.PakFileContainer;
+import com.battledash.jmodel.Methods.PakReader.PakIndex;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -103,9 +103,12 @@ public class JModelMain {
             if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
                 TreeItem<String> item = (TreeItem) PakDirectoryTree.getSelectionModel().getSelectedItem();
                 PakDirectoryFiles.getItems().clear();
-                List<GameFile> files = index.getDirectories().get(TreeUtility.getPathFromItem(item));
+                //List<GameFile> files = index.getDirectories().get(TreeUtility.getPathFromItem(item));
+                //List<GameFile> files = container.getDirectory(TreeUtility.getPathFromItem(item));
+                List<GameFile> files = PakIndex.getDirectory(TreeUtility.getPathFromItem(item));
                 if (files == null) return;
                 for (GameFile gameFile : files) {
+                    System.out.println(gameFile.getName());
                     if (PakDirectoryFiles.getItems().contains(gameFile.getNameWithoutExtension())) continue;
                     PakDirectoryFiles.getItems().add(gameFile.getNameWithoutExtension());
                     Collections.sort(PakDirectoryFiles.getItems(), (Comparator<String>) (s1, s2) -> s1.compareToIgnoreCase(s2));
@@ -124,7 +127,7 @@ public class JModelMain {
                 String path = folder + assetName;
                 logger.info("Loading game asset " + path);
                 // Gets GameFile Object for pak name from asset path
-                loadedGameFile = index.getGameFileAtPath(folder, assetName);
+                loadedGameFile = container.provider.findGameFile(path);
                 // Loads Package from path
                 loadedPackage = container.provider.loadGameFile(path);
                 logger.info("Loaded game file from " + loadedGameFile.getPakFileName());
@@ -189,7 +192,7 @@ public class JModelMain {
 
         Parent root = loader.load();
         JModelExport controller = loader.getController();
-        controller.handleAsset(TreeUtility.getPathFromItem((TreeItem) JModel.mainSceneController.PakDirectoryTree.getSelectionModel().getSelectedItem()), loadedGameFile, loadedPackage, JsonAssetData.getText(), AssetImage.getImage());
+        controller.handleAsset(TreeUtility.getSelectedPath(), loadedGameFile, loadedPackage, JsonAssetData.getText(), AssetImage.getImage());
         window.setScene(new Scene(root));
         window.show();
     }
@@ -210,7 +213,10 @@ public class JModelMain {
             for (String pakName : directory.list()) {
                 if (!pakName.endsWith(".pak")) continue;
                 PakFileReader reader = new PakFileReader(directory + "\\" + pakName);
-                if (!reader.testAesKey(aesKey)) continue;
+                if (!reader.testAesKey(aesKey)) {
+                    logger.debug(pakName + ": Failed AES Key");
+                    continue;
+                }
                 reader.setAesKey(aesKey);
                 index.addPak(reader);
                 logger.debug(pakName + ": " + reader.getFileCount() + " files (" + reader.getEncryptedFileCount() + " encrypted)," + " mount point: \"" + reader.getMountPrefix() + "\", version " + reader.getPakInfo().getVersion());
@@ -221,6 +227,8 @@ public class JModelMain {
                 PakDirectoryTree.setRoot(TreeUtility.generateTree(index.getIndex()));
                 logger.info("Done generating");
                 PakDirectoryTree.setShowRoot(false);
+                index.clearIndex();
+                System.gc();
             });
 
         }).start();

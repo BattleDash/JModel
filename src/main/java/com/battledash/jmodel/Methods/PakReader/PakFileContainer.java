@@ -15,16 +15,21 @@
  * along with JModel.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.battledash.jmodel.PakReader;
+package com.battledash.jmodel.Methods.PakReader;
 
-public class PakReader {
+import me.fungames.jfortniteparse.fileprovider.DefaultFileProvider;
 
-    public PakReader() {
+import java.io.File;
 
-    }
+public class PakFileContainer {
 
-    public void readPak() {
+    public File pakFolder;
+    public DefaultFileProvider provider;
 
+    public PakFileContainer(File pakFolder, String aesKey) {
+        this.pakFolder = pakFolder;
+        this.provider = new DefaultFileProvider(pakFolder, 1);
+        this.provider.submitKey(this.provider.requiredKeys().get(0), aesKey);
     }
 
 }

@@ -15,40 +15,34 @@
  * along with JModel.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.battledash.jmodel.PakReader;
+package com.battledash.jmodel.Methods.PakReader;
 
+import com.battledash.jmodel.JModel;
 import me.fungames.jfortniteparse.ue4.pak.GameFile;
 import me.fungames.jfortniteparse.ue4.pak.PakFileReader;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PakIndex {
 
     private List<GameFile> index;
-    private Map<String, List<GameFile>> directories = new HashMap<>();
+    private static List<PakFileReader> readers = new ArrayList<>();
+
+    private PakFileReader reader;
 
     public PakIndex() {
         clearIndex();
     }
 
     public void addPak(PakFileReader reader) {
+        readers.add(reader);
+        this.reader = reader;
         reader.readIndex();
         index.addAll(reader.getFiles());
-        for (GameFile gameFile : index) {
-            String path = gameFile.getPathWithoutExtension().split(Pattern.quote(gameFile.getNameWithoutExtension()))[0];
-            List<GameFile> files = new ArrayList<>();
-            if (directories.get(path) != null)
-                files = directories.get(path);
-
-            files.add(gameFile);
-            directories.put(path, files);
-        }
     }
 
     public void clearIndex() {
@@ -59,28 +53,26 @@ public class PakIndex {
         return index;
     }
 
-    public Map<String, List<GameFile>> getDirectories() {
-        return directories;
-    }
-
     public List<GameFile> searchForFiles(String search) {
         return index.stream()
                 .filter(gameFile -> search.toLowerCase().startsWith(gameFile.getNameWithoutExtension().toLowerCase()))
                 .collect(Collectors.toList());
     }
 
-    // Future use
-    public List<GameFile> getDirectory(String path) {
-        return directories.get(path);
-    }
-
-    public GameFile getGameFileAtPath(String folder, String fileName) {
-        for (GameFile gameFile : directories.get(folder)) {
-            if (gameFile.getNameWithoutExtension().equals(fileName)) {
-                return gameFile;
-            }
+    public static List<GameFile> getDirectory(String path) {
+        List<GameFile> files = new ArrayList<>();
+        for (PakFileReader pakFileReader : readers) {
+            try {
+                String pathMount = path.substring(pakFileReader.getMountPrefix().length());
+                Map<String, Integer> dataMap = pakFileReader.getDirectoryIndex().get(pathMount);
+                if (dataMap == null)
+                    continue;
+                Set<String> rawFiles = dataMap.keySet();
+                for (String file : rawFiles)
+                    files.add(JModel.mainSceneController.container.provider.findGameFile(path + file));
+            } catch (Exception e) { }
         }
-        return null;
+        return files;
     }
 
 }
