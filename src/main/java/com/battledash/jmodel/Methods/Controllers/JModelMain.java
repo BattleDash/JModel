@@ -201,6 +201,7 @@ public class JModelMain {
     public void loadAllPaks(Event e) {
         new Thread(() -> {
             index = new PakIndex();
+            index.clearIndex();
 
             File directory = PAKsUtility.getGameFilesLocation();
             String aesKey = "0xb5dbd6c9db714cc3e2c9c7422eb0a7e667168d92c59770214ec6abc68d8c2d3e";
@@ -224,7 +225,7 @@ public class JModelMain {
                 PakDirectoryTree.setRoot(TreeUtility.generateTree(index.getIndex()));
                 logger.info("Done generating");
                 PakDirectoryTree.setShowRoot(false);
-                index.clearIndex();
+                index.deleteIndex();
                 System.gc();
             });
 

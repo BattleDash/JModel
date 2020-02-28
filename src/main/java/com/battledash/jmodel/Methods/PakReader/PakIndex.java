@@ -20,7 +20,10 @@ package com.battledash.jmodel.Methods.PakReader;
 import com.battledash.jmodel.JModel;
 import me.fungames.jfortniteparse.ue4.pak.GameFile;
 import me.fungames.jfortniteparse.ue4.pak.PakFileReader;
+import org.apache.commons.io.FilenameUtils;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +52,10 @@ public class PakIndex {
         index = new ArrayList<>();
     }
 
+    public void deleteIndex() {
+        index = null;
+    }
+
     public List<GameFile> getIndex() {
         return index;
     }
@@ -63,13 +70,10 @@ public class PakIndex {
         List<GameFile> files = new ArrayList<>();
         for (PakFileReader pakFileReader : readers) {
             try {
-                String pathMount = path.substring(pakFileReader.getMountPrefix().length());
-                Map<String, Integer> dataMap = pakFileReader.getDirectoryIndex().get(pathMount);
-                if (dataMap == null)
-                    continue;
-                Set<String> rawFiles = dataMap.keySet();
-                for (String file : rawFiles)
-                    files.add(JModel.mainSceneController.container.provider.findGameFile(path + file));
+                for (GameFile file : pakFileReader.getFiles()) {
+                    if (FilenameUtils.getPath(file.getPath()).equals(path))
+                        files.add(file);
+                }
             } catch (Exception e) { }
         }
         return files;
