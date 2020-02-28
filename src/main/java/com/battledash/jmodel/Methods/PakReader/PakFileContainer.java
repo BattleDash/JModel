@@ -18,8 +18,14 @@
 package com.battledash.jmodel.Methods.PakReader;
 
 import me.fungames.jfortniteparse.fileprovider.DefaultFileProvider;
+import me.fungames.jfortniteparse.ue4.FGuid;
+import me.fungames.jfortniteparse.ue4.pak.GameFile;
+import me.fungames.jfortniteparse.ue4.pak.PakFileReader;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PakFileContainer {
 
@@ -29,7 +35,18 @@ public class PakFileContainer {
     public PakFileContainer(File pakFolder, String aesKey) {
         this.pakFolder = pakFolder;
         this.provider = new DefaultFileProvider(pakFolder, 1);
-        this.provider.submitKey(this.provider.requiredKeys().get(0), aesKey);
+        this.provider.submitKey(FGuid.Companion.getMainGuid(), aesKey);
+    }
+
+    public List<GameFile> getDirectory(String path) {
+        List<GameFile> files = new ArrayList<>();
+        try {
+            for (GameFile file : provider.getFiles().values()) {
+                if (FilenameUtils.getPath(file.getPath()).equals(path))
+                    files.add(file);
+            }
+        } catch (Exception e) { }
+        return files;
     }
 
 }

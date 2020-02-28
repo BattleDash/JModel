@@ -24,18 +24,19 @@ import me.fungames.jfortniteparse.ue4.pak.GameFile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class TreeUtility {
 
-    public static TreeItem generateTree(List<GameFile> index) {
+    public static TreeItem generateTree(Map<String, GameFile> index) {
         TreeItem<String> root = new TreeItem<>("root");
-        for (GameFile gameFile : index) {
+        index.forEach((name, gameFile) -> {
             TreeItem<String> current = root;
             for (String component : gameFile.getPath().split("/")) {
                 if (component.contains(".")) continue;
                 current = getOrCreateChild(current, component);
             }
-        }
+        });
         System.out.println("Finished generating tree");
         return root;
     }

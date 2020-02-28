@@ -22,7 +22,6 @@ import com.battledash.jmodel.Methods.Utilities.Logger;
 import com.battledash.jmodel.Methods.Utilities.PAKsUtility;
 import com.battledash.jmodel.Methods.Utilities.TreeUtility;
 import com.battledash.jmodel.Methods.PakReader.PakFileContainer;
-import com.battledash.jmodel.Methods.PakReader.PakIndex;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -55,7 +54,6 @@ import me.fungames.jfortniteparse.ue4.assets.exports.USoundWave;
 import me.fungames.jfortniteparse.ue4.assets.exports.athena.AthenaItemDefinition;
 import me.fungames.jfortniteparse.ue4.assets.exports.fort.FortWeaponMeleeItemDefinition;
 import me.fungames.jfortniteparse.ue4.pak.GameFile;
-import me.fungames.jfortniteparse.ue4.pak.PakFileReader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -87,7 +85,6 @@ public class JModelMain {
 
     public static Logger logger;
 
-    public PakIndex index;
     public PakFileContainer container;
     public GameFile loadedGameFile;
     public Package loadedPackage;
@@ -103,7 +100,7 @@ public class JModelMain {
             if (node instanceof Text || (node instanceof TreeCell && ((TreeCell) node).getText() != null)) {
                 TreeItem<String> item = (TreeItem) PakDirectoryTree.getSelectionModel().getSelectedItem();
                 PakDirectoryFiles.getItems().clear();
-                List<GameFile> files = PakIndex.getDirectory(TreeUtility.getPathFromItem(item));
+                List<GameFile> files = container.getDirectory(TreeUtility.getPathFromItem(item));
                 if (files == null) return;
                 for (GameFile gameFile : files) {
                     if (PakDirectoryFiles.getItems().contains(gameFile.getNameWithoutExtension())) continue;
@@ -200,32 +197,17 @@ public class JModelMain {
 
     public void loadAllPaks(Event e) {
         new Thread(() -> {
-            index = new PakIndex();
-            index.clearIndex();
 
             File directory = PAKsUtility.getGameFilesLocation();
             String aesKey = "0xb5dbd6c9db714cc3e2c9c7422eb0a7e667168d92c59770214ec6abc68d8c2d3e";
 
             container = new PakFileContainer(directory, aesKey);
 
-            for (String pakName : directory.list()) {
-                if (!pakName.endsWith(".pak")) continue;
-                PakFileReader reader = new PakFileReader(directory + "\\" + pakName);
-                if (!reader.testAesKey(aesKey)) {
-                    logger.debug(pakName + ": Failed AES Key");
-                    continue;
-                }
-                reader.setAesKey(aesKey);
-                index.addPak(reader);
-                logger.debug(pakName + ": " + reader.getFileCount() + " files (" + reader.getEncryptedFileCount() + " encrypted)," + " mount point: \"" + reader.getMountPrefix() + "\", version " + reader.getPakInfo().getVersion());
-            }
-
             logger.info("Requesting pak index tree generation");
             Platform.runLater(() -> {
-                PakDirectoryTree.setRoot(TreeUtility.generateTree(index.getIndex()));
+                PakDirectoryTree.setRoot(TreeUtility.generateTree(container.provider.getFiles()));
                 logger.info("Done generating");
                 PakDirectoryTree.setShowRoot(false);
-                index.deleteIndex();
                 System.gc();
             });
 
