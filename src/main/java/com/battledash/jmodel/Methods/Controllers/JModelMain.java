@@ -62,6 +62,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
@@ -206,18 +207,24 @@ public class JModelMain {
             File directory = PAKsUtility.getGameFilesLocation();
             AtomicReference<String> aes = new AtomicReference<>("");
             try {
-                URL url = new URL("https://fortnite-api.com/v2/aes");
-                URLConnection con = url.openConnection();
-                con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 2.0; Windows NT 5.0; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)");
-                InputStream stream = con.getInputStream();
-                Scanner scan = new Scanner(stream);
-                StringBuilder builder = new StringBuilder();
-                while (scan.hasNext()) {
-                    builder.append(scan.next());
-                }
+                URL url = new URL("https://benbotfn.tk/api/v1/aes");
+                HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
+                httpcon.setRequestMethod("GET");
+                httpcon.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 2.0; Windows NT 5.0; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)");
+                httpcon.connect();
+                if (httpcon.getResponseCode() != 200) {
+                    aes.set("0x3f3717f4f206ff21bda8d3bf62b323556d1d2e7d9b0f7abd572d3cfe5b569fac");
+                } else {
+                    InputStream stream = httpcon.getInputStream();
+                    Scanner scan = new Scanner(stream);
+                    StringBuilder builder = new StringBuilder();
+                    while (scan.hasNext()) {
+                        builder.append(scan.next());
+                    }
 
-                JSONObject obj = new JSONObject(builder.toString());
-                aes.set(obj.getJSONObject("data").getString("updated"));
+                    JSONObject obj = new JSONObject(builder.toString());
+                    aes.set(obj.getString("mainKey"));
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
