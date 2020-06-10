@@ -37,9 +37,7 @@ public class PAKsUtility {
                 for (LauncherInstalled.InstallationData installationData : launcherInstalled.InstallationList) {
                     if (installationData.AppName.equals("Fortnite")) {
                         return new File(installationData.InstallLocation + "\\FortniteGame\\Content\\Paks");
-                    } else {
-						return new File("C:\\Program Files\\Epic Games\\Fortnite\\fn\\FortniteGame\\Content\\Paks");
-					}
+                    } 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
