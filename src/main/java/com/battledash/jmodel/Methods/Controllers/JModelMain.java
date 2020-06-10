@@ -54,15 +54,21 @@ import me.fungames.jfortniteparse.ue4.assets.exports.USoundWave;
 import me.fungames.jfortniteparse.ue4.assets.exports.athena.AthenaItemDefinition;
 import me.fungames.jfortniteparse.ue4.assets.exports.fort.FortWeaponMeleeItemDefinition;
 import me.fungames.jfortniteparse.ue4.pak.GameFile;
+import org.json.JSONObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class JModelMain {
 
@@ -197,11 +203,26 @@ public class JModelMain {
 
     public void loadAllPaks(Event e) {
         new Thread(() -> {
-
             File directory = PAKsUtility.getGameFilesLocation();
-            String aesKey = "0xb5dbd6c9db714cc3e2c9c7422eb0a7e667168d92c59770214ec6abc68d8c2d3e";
+            AtomicReference<String> aes = new AtomicReference<>("");
+            try {
+                URL url = new URL("https://fortnite-api.com/v2/aes");
+                URLConnection con = url.openConnection();
+                con.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 2.0; Windows NT 5.0; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0)");
+                InputStream stream = con.getInputStream();
+                Scanner scan = new Scanner(stream);
+                StringBuilder builder = new StringBuilder();
+                while (scan.hasNext()) {
+                    builder.append(scan.next());
+                }
 
-            container = new PakFileContainer(directory, aesKey);
+                JSONObject obj = new JSONObject(builder.toString());
+                aes.set(obj.getJSONObject("data").getString("updated"));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            container = new PakFileContainer(directory, aes.get());
 
             logger.info("Requesting pak index tree generation");
             Platform.runLater(() -> {
@@ -210,7 +231,6 @@ public class JModelMain {
                 PakDirectoryTree.setShowRoot(false);
                 System.gc();
             });
-
         }).start();
     }
 

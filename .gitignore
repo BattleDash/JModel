@@ -8,7 +8,10 @@
 out/
 target/
 Output/
-.idea/
+.idea/*
+*.iml
+
+dependency-reduced-pom.xml
 
 # BlueJ files
 *.ctxt

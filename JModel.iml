@@ -12,8 +12,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: me.fungames:JFortniteParse:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
-    <orderEntry type="library" name="Maven: me.fungames:JFortniteParse:2.3.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: me.fungames:JOodle:1.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.java.dev.jna:jna:5.4.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: me.fungames:KotlinASTC:1.1" level="project" />
@@ -32,5 +30,6 @@
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.6" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20200518" level="project" />
   </component>
 </module>
