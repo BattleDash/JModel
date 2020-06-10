@@ -34,82 +34,91 @@
   ~ along with JModel.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<AnchorPane disable="false" prefHeight="700.0" prefWidth="1200.0" stylesheets="@../style.css" visible="true" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.battledash.jmodel.Methods.Controllers.JModelMain">
-  <children>
-    <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <center>
-        <HBox>
-          <children>
-                  <ListView fx:id="PakDirectoryFiles" prefHeight="343.0" prefWidth="389.0" HBox.hgrow="ALWAYS" />
-            <TextArea id="" fx:id="LogText" editable="false" prefHeight="343.0" prefWidth="890.0" text="" wrapText="true" HBox.hgrow="ALWAYS" />
-          </children>
-        </HBox>
-      </center>
-      <top>
-        <VBox fillWidth="true" prefHeight="336.0" prefWidth="1200.0">
-          <children>
-            <MenuBar VBox.vgrow="ALWAYS">
-              <menus>
-                <Menu mnemonicParsing="false" text="Load">
-                  <items>
-                              <MenuItem mnemonicParsing="false" onAction="#loadAllPaks" text="Load All PAKs" />
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <HBox VBox.vgrow="ALWAYS">
-              <children>
-                <TreeView fx:id="PakDirectoryTree" prefHeight="186.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                <TextArea fx:id="JsonAssetData" disable="false" editable="false" focusTraversable="true" prefHeight="311.0" prefWidth="390.0" visible="true" wrapText="true" HBox.hgrow="ALWAYS" />
-                <ImageView fx:id="AssetImage" fitHeight="310.0" fitWidth="310.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS" />
-              </children>
-            </HBox>
-          </children>
-        </VBox>
-      </top>
-         <bottom>
-            <VBox prefHeight="40.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
-               <children>
-                  <HBox prefHeight="26.0" prefWidth="1200.0" spacing="5.0" VBox.vgrow="ALWAYS">
-                     <children>
-                        <Label text="Search:">
-                           <HBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </HBox.margin>
-                        </Label>
-                        <TextField fx:id="FileSearchField" prefHeight="25.0" prefWidth="193.0" />
-                        <Region prefHeight="26.0" prefWidth="690.0" />
-                        <Button fx:id="ExtractButton" mnemonicParsing="false" onMouseClicked="#onExtractButton" prefHeight="25.0" prefWidth="107.0" text="Extract Asset" />
-                     </children>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <VBox.margin>
-                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                     </VBox.margin>
-                  </HBox>
-              <HBox>
-                <children>
-                  <Label fx:id="VersionText" text="JModel 0.0.5 by BattleDash" HBox.hgrow="ALWAYS" />
-                </children>
-                <padding>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                </padding>
-              </HBox>
-               </children>
-            </VBox>
-         </bottom>
-    </BorderPane>
-  </children>
+<AnchorPane disable="false" prefHeight="700.0" prefWidth="1200.0" stylesheets="@../style.css" visible="true"
+            xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.battledash.jmodel.Methods.Controllers.JModelMain">
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0">
+            <center>
+                <HBox>
+                    <children>
+                        <ListView fx:id="PakDirectoryFiles" prefHeight="343.0" prefWidth="389.0" HBox.hgrow="ALWAYS"/>
+                        <TextArea id="" fx:id="LogText" editable="false" prefHeight="343.0" prefWidth="890.0" text=""
+                                  wrapText="true" HBox.hgrow="ALWAYS"/>
+                    </children>
+                </HBox>
+            </center>
+            <top>
+                <VBox fillWidth="true" prefHeight="336.0" prefWidth="1200.0">
+                    <children>
+                        <MenuBar VBox.vgrow="ALWAYS">
+                            <menus>
+                                <Menu mnemonicParsing="false" text="Load">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#loadAllPaks" text="Load All PAKs"/>
+                                        <MenuItem mnemonicParsing="false" text="Close"/>
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Edit">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="Delete"/>
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Help">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="About"/>
+                                    </items>
+                                </Menu>
+                            </menus>
+                        </MenuBar>
+                        <HBox VBox.vgrow="ALWAYS">
+                            <children>
+                                <TreeView fx:id="PakDirectoryTree" prefHeight="186.0" prefWidth="200.0"
+                                          HBox.hgrow="ALWAYS"/>
+                                <TextArea fx:id="JsonAssetData" disable="false" editable="false" focusTraversable="true"
+                                          prefHeight="311.0" prefWidth="390.0" visible="true" wrapText="true"
+                                          HBox.hgrow="ALWAYS"/>
+                                <ImageView fx:id="AssetImage" fitHeight="310.0" fitWidth="310.0" pickOnBounds="true"
+                                           preserveRatio="true" HBox.hgrow="ALWAYS"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </top>
+            <bottom>
+                <VBox prefHeight="40.0" prefWidth="1200.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <HBox prefHeight="26.0" prefWidth="1200.0" spacing="5.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <Label text="Search:">
+                                    <HBox.margin>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <TextField fx:id="FileSearchField" prefHeight="25.0" prefWidth="193.0"/>
+                                <Region prefHeight="26.0" prefWidth="690.0"/>
+                                <Button fx:id="ExtractButton" mnemonicParsing="false" onMouseClicked="#onExtractButton"
+                                        prefHeight="25.0" prefWidth="107.0" text="Extract Asset"/>
+                            </children>
+                            <opaqueInsets>
+                                <Insets/>
+                            </opaqueInsets>
+                            <VBox.margin>
+                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                            </VBox.margin>
+                        </HBox>
+                        <HBox>
+                            <children>
+                                <Label fx:id="VersionText" text="JModel 0.0.5 by BattleDash" HBox.hgrow="ALWAYS"/>
+                            </children>
+                            <padding>
+                                <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
+                            </padding>
+                        </HBox>
+                    </children>
+                </VBox>
+            </bottom>
+        </BorderPane>
+    </children>
 </AnchorPane>
